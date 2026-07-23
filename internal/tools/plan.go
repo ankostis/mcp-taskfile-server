@@ -81,7 +81,7 @@ func BuildPlan(snap StateSnapshot, logger *slog.Logger) Plan {
 				continue
 			}
 
-			tool := CreateToolForTask(root.Taskfile, prefix, taskName, taskDef)
+			tool := CreateToolForTask(root.Taskfile, prefix, taskName, taskDef, logger)
 			candidates[tool.Name] = append(candidates[tool.Name], toolCandidate{
 				workdir:  root.Workdir,
 				taskName: taskName,
