@@ -9,7 +9,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/jsonrpc"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
 )
 
 // unloadRoot removes the root with the given canonical URI from the

@@ -27,7 +27,7 @@ Built using the official [Go MCP SDK](https://github.com/modelcontextprotocol/go
 ## Installation
 
 ```bash
-go install github.com/rsclarke/mcp-taskfile-server@latest
+go install github.com/ankostis/mcp-taskfile-server@latest
 ```
 
 This places the `mcp-taskfile-server` binary in `$GOBIN` (or `$GOPATH/bin`).

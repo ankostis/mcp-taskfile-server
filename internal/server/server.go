@@ -5,10 +5,10 @@ import (
 	"log/slog"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/logging"
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
-	"github.com/rsclarke/mcp-taskfile-server/internal/tools"
-	"github.com/rsclarke/mcp-taskfile-server/internal/watch"
+	"github.com/ankostis/mcp-taskfile-server/internal/logging"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/tools"
+	"github.com/ankostis/mcp-taskfile-server/internal/watch"
 )
 
 // New creates a new Taskfile MCP server. The server starts with a

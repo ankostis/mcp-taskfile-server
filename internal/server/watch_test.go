@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
-	"github.com/rsclarke/mcp-taskfile-server/internal/watch"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/watch"
 )
 
 func TestLoadRoot_WatchTaskfilesIncludesTransitive(t *testing.T) {

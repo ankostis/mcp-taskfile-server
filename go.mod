@@ -1,4 +1,4 @@
-module github.com/rsclarke/mcp-taskfile-server
+module github.com/ankostis/mcp-taskfile-server
 
 go 1.25.10
 

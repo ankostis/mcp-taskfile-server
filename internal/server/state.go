@@ -6,9 +6,9 @@ import (
 	"sync/atomic"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
-	"github.com/rsclarke/mcp-taskfile-server/internal/tools"
-	"github.com/rsclarke/mcp-taskfile-server/internal/watch"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/tools"
+	"github.com/ankostis/mcp-taskfile-server/internal/watch"
 )
 
 // toolRegistry is the subset of *mcp.Server used for tool registration.

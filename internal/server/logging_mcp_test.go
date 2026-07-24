@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/logging"
+	"github.com/ankostis/mcp-taskfile-server/internal/logging"
 )
 
 // TestServer_NoMCPLoggingBeforeInitialized verifies that a freshly

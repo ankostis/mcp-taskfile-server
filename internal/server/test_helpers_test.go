@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
-	"github.com/rsclarke/mcp-taskfile-server/internal/watch"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/watch"
 )
 
 // loadServerFromFixture creates a Server from a testdata fixture directory.

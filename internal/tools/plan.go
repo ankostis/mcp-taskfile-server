@@ -13,7 +13,7 @@ import (
 
 	"github.com/go-task/task/v3/taskfile/ast"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/exec"
+	"github.com/ankostis/mcp-taskfile-server/internal/exec"
 )
 
 // RegisteredTool wraps an mcp.Tool with its serialized InputSchema bytes

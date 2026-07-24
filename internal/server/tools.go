@@ -3,7 +3,7 @@ package server
 import (
 	"maps"
 
-	"github.com/rsclarke/mcp-taskfile-server/internal/tools"
+	"github.com/ankostis/mcp-taskfile-server/internal/tools"
 )
 
 // syncTools snapshots state under lock, builds a plan without the lock,

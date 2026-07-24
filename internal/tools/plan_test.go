@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rsclarke/mcp-taskfile-server/internal/roots"
+	"github.com/ankostis/mcp-taskfile-server/internal/roots"
 )
 
 func TestBuildPlan_SkipsInternal(t *testing.T) {

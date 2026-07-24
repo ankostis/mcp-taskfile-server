@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/rsclarke/mcp-taskfile-server/internal/logging"
-	"github.com/rsclarke/mcp-taskfile-server/internal/server"
+	"github.com/ankostis/mcp-taskfile-server/internal/logging"
+	"github.com/ankostis/mcp-taskfile-server/internal/server"
 )
 
 // Build-time variables set via -ldflags.
