@@ -117,8 +117,18 @@ func (s *Server) loadDesired(ctx context.Context, mcpRoots []*mcp.Root, existing
 			)
 			continue
 		}
+		s.log().Debug("resolved root URI",
+			slog.String("event", "root.resolved"),
+			slog.String("raw_uri", r.URI),
+			slog.String("canonical_uri", canonicalURI),
+			slog.String("dir", dir),
+		)
 		desiredURIs[canonicalURI] = struct{}{}
 		if _, exists := existing[canonicalURI]; exists {
+			s.log().Debug("root already loaded, skipping",
+				slog.String("event", "root.skip_existing"),
+				slog.String("canonical_uri", canonicalURI),
+			)
 			continue
 		}
 		if _, exists := loadedRoots[canonicalURI]; exists {
@@ -189,8 +199,14 @@ func (s *Server) initializeRoots(ctx context.Context, mcpRoots []*mcp.Root) (rec
 		s.mu.Unlock()
 		return reconcileResult{}, errors.New("no valid roots found")
 	}
+	total := len(s.roots)
 	s.mu.Unlock()
 
+	s.log().Debug("roots initialized",
+		slog.String("event", "roots.initialized"),
+		slog.Any("added", res.added),
+		slog.Int("total", total),
+	)
 	return res, nil
 }
 
@@ -225,8 +241,15 @@ func (s *Server) replaceRoots(ctx context.Context, mcpRoots []*mcp.Root) reconci
 	if res.changed() {
 		s.generation++
 	}
+	total := len(s.roots)
 	s.mu.Unlock()
 
+	s.log().Debug("roots replaced",
+		slog.String("event", "roots.replaced"),
+		slog.Any("added", res.added),
+		slog.Any("removed", res.removed),
+		slog.Int("total", total),
+	)
 	return res
 }
 
@@ -235,7 +258,7 @@ func (s *Server) replaceRoots(ctx context.Context, mcpRoots []*mcp.Root) reconci
 // On success it drives the post-reconcile side effects (syncTools, watcher
 // start) outside of s.mu.
 func (s *Server) initializeRootsFromSession(ctx context.Context, session *mcp.ServerSession) error {
-	mcpRoots, err := listClientRoots(ctx, session)
+	mcpRoots, err := listClientRoots(ctx, session, s.log())
 	if err != nil {
 		return err
 	}
@@ -255,9 +278,18 @@ func (s *Server) initializeRootsFromSession(ctx context.Context, session *mcp.Se
 // listClientRoots returns the desired roots for initialization, falling
 // back to the working directory if the client does not advertise the
 // roots capability.
-func listClientRoots(ctx context.Context, session *mcp.ServerSession) ([]*mcp.Root, error) {
+func listClientRoots(ctx context.Context, session *mcp.ServerSession, logger *slog.Logger) ([]*mcp.Root, error) {
 	rootRes, err := session.ListRoots(ctx, nil)
 	if err == nil {
+		uris := make([]string, 0, len(rootRes.Roots))
+		for _, r := range rootRes.Roots {
+			uris = append(uris, r.URI)
+		}
+		logger.Debug("listed roots from client",
+			slog.String("event", "roots.listed"),
+			slog.Int("count", len(rootRes.Roots)),
+			slog.Any("uris", uris),
+		)
 		return rootRes.Roots, nil
 	}
 	if !isMethodNotFound(err) {
@@ -268,5 +300,10 @@ func listClientRoots(ctx context.Context, session *mcp.ServerSession) ([]*mcp.Ro
 	if wdErr != nil {
 		return nil, fmt.Errorf("failed to get working directory: %w", wdErr)
 	}
-	return []*mcp.Root{{URI: roots.DirToURI(workdir)}}, nil
+	uri := roots.DirToURI(workdir)
+	logger.Debug("client does not support roots capability, using working directory",
+		slog.String("event", "roots.cwd_fallback"),
+		slog.String("uri", uri),
+	)
+	return []*mcp.Root{{URI: uri}}, nil
 }

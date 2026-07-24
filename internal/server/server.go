@@ -67,6 +67,16 @@ func (s *Server) HandleRootsChanged(ctx context.Context, req *mcp.RootsListChang
 		return
 	}
 
+	uris := make([]string, 0, len(rootRes.Roots))
+	for _, r := range rootRes.Roots {
+		uris = append(uris, r.URI)
+	}
+	s.log().Debug("roots changed notification received",
+		slog.String("event", "roots.changed"),
+		slog.Int("count", len(rootRes.Roots)),
+		slog.Any("uris", uris),
+	)
+
 	res := s.replaceRoots(ctx, rootRes.Roots)
 
 	if err := s.syncTools(); err != nil {

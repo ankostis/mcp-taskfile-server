@@ -11,7 +11,7 @@ func TestCreateToolForTask_Basic(t *testing.T) {
 	root := loadRootFromFixture(t, "basic")
 
 	taskDef := lookupTask(t, root.Taskfile, "greet")
-	tool := CreateToolForTask(root.Taskfile, "", "greet", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "greet", taskDef)
 
 	if tool.Name != "greet" {
 		t.Errorf("Name = %q, want %q", tool.Name, "greet")
@@ -30,7 +30,7 @@ func TestCreateToolForTask_NoDescription(t *testing.T) {
 	root := loadRootFromFixture(t, "no-desc")
 
 	taskDef := lookupTask(t, root.Taskfile, "build")
-	tool := CreateToolForTask(root.Taskfile, "", "build", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "build", taskDef)
 
 	want := "Execute task: build"
 	if tool.Description != want {
@@ -44,7 +44,7 @@ func TestCreateToolForTask_TaskVarsExcluded(t *testing.T) {
 	root := loadRootFromFixture(t, "task-vars")
 
 	taskDef := lookupTask(t, root.Taskfile, "deploy")
-	tool := CreateToolForTask(root.Taskfile, "", "deploy", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "deploy", taskDef)
 
 	props := schemaProperties(t, tool)
 	if len(props) != 0 {
@@ -59,7 +59,7 @@ func TestCreateToolForTask_GlobalVars(t *testing.T) {
 	root := loadRootFromFixture(t, "global-vars")
 
 	taskDef := lookupTask(t, root.Taskfile, "info")
-	tool := CreateToolForTask(root.Taskfile, "", "info", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "info", taskDef)
 
 	props := schemaProperties(t, tool)
 	prop, ok := props["APP_NAME"]
@@ -83,7 +83,7 @@ func TestCreateToolForTask_GlobalVarsHonoured(t *testing.T) {
 	root := loadRootFromFixture(t, "override-vars")
 
 	taskDef := lookupTask(t, root.Taskfile, "deploy")
-	tool := CreateToolForTask(root.Taskfile, "", "deploy", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "deploy", taskDef)
 
 	props := schemaProperties(t, tool)
 	if len(props) != 1 {
@@ -111,7 +111,7 @@ func TestCreateToolForTask_GlobalVarWithoutStaticDefault(t *testing.T) {
 	root := loadRootFromFixture(t, "requires")
 
 	taskDef := lookupTask(t, root.Taskfile, "release")
-	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef)
 
 	props := schemaProperties(t, tool)
 	prop, ok := props["GIT_SHA"].(map[string]any)
@@ -130,7 +130,7 @@ func TestCreateToolForTask_RequiresVar(t *testing.T) {
 	root := loadRootFromFixture(t, "requires")
 
 	taskDef := lookupTask(t, root.Taskfile, "release")
-	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef)
 
 	props := schemaProperties(t, tool)
 	prop, ok := props["VERSION"].(map[string]any)
@@ -157,7 +157,7 @@ func TestCreateToolForTask_RequiresEnum(t *testing.T) {
 	root := loadRootFromFixture(t, "requires")
 
 	taskDef := lookupTask(t, root.Taskfile, "release")
-	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "release", taskDef)
 
 	props := schemaProperties(t, tool)
 	prop, ok := props["CHANNEL"].(map[string]any)
@@ -201,7 +201,7 @@ func TestCreateToolForTask_Namespaced(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.taskName, func(t *testing.T) {
 			taskDef := lookupTask(t, root.Taskfile, tt.taskName)
-			tool := CreateToolForTask(root.Taskfile, "", tt.taskName, taskDef, testLogger())
+			tool := CreateToolForTask(root.Taskfile, "", tt.taskName, taskDef)
 
 			if tool.Name != tt.wantTool {
 				t.Errorf("Name = %q, want %q", tool.Name, tt.wantTool)
@@ -218,7 +218,7 @@ func TestCreateToolForTask_Wildcard(t *testing.T) {
 
 	t.Run("single wildcard", func(t *testing.T) {
 		taskDef := lookupTask(t, root.Taskfile, "start:*")
-		tool := CreateToolForTask(root.Taskfile, "", "start:*", taskDef, testLogger())
+		tool := CreateToolForTask(root.Taskfile, "", "start:*", taskDef)
 
 		if tool.Name != "start" {
 			t.Errorf("Name = %q, want %q", tool.Name, "start")
@@ -251,7 +251,7 @@ func TestCreateToolForTask_Wildcard(t *testing.T) {
 
 	t.Run("double wildcard", func(t *testing.T) {
 		taskDef := lookupTask(t, root.Taskfile, "deploy:*:*")
-		tool := CreateToolForTask(root.Taskfile, "", "deploy:*:*", taskDef, testLogger())
+		tool := CreateToolForTask(root.Taskfile, "", "deploy:*:*", taskDef)
 
 		if tool.Name != "deploy" {
 			t.Errorf("Name = %q, want %q", tool.Name, "deploy")
@@ -282,7 +282,7 @@ func TestCreateToolForTask_LeadingDot(t *testing.T) {
 	root := loadRootFromFixture(t, "leading-dot")
 
 	taskDef := lookupTask(t, root.Taskfile, "uv:.venv")
-	tool := CreateToolForTask(root.Taskfile, "", "uv:.venv", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "", "uv:.venv", taskDef)
 
 	if tool.Name != "uv_.venv" {
 		t.Errorf("Name = %q, want %q", tool.Name, "uv_.venv")
@@ -293,7 +293,7 @@ func TestCreateToolForTask_WithPrefix(t *testing.T) {
 	root := loadRootFromFixture(t, "basic")
 
 	taskDef := lookupTask(t, root.Taskfile, "greet")
-	tool := CreateToolForTask(root.Taskfile, "myproject", "greet", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, "myproject", "greet", taskDef)
 
 	if tool.Name != "myproject_greet" {
 		t.Errorf("Name = %q, want %q", tool.Name, "myproject_greet")
@@ -308,7 +308,7 @@ func TestCreateToolForTask_WithPrefix_EnforcesMaxLength(t *testing.T) {
 	taskDef := lookupTask(t, root.Taskfile, "greet")
 	prefix := strings.Repeat("project", 20)
 
-	tool := CreateToolForTask(root.Taskfile, prefix, "greet", taskDef, testLogger())
+	tool := CreateToolForTask(root.Taskfile, prefix, "greet", taskDef)
 
 	if len(tool.Name) != maxToolNameLength {
 		t.Fatalf("len(tool.Name) = %d, want %d", len(tool.Name), maxToolNameLength)

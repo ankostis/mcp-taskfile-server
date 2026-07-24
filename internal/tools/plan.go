@@ -71,17 +71,25 @@ func BuildPlan(snap StateSnapshot, logger *slog.Logger) Plan {
 
 	for _, root := range snap.Roots {
 		if root.Taskfile == nil || root.Taskfile.Tasks == nil {
+			logger.Debug("skipping root with no taskfile",
+				slog.String("event", "plan.root_empty"),
+				slog.String("workdir", root.Workdir),
+			)
 			continue
 		}
 
 		prefix := RootPrefix(root.Workdir, len(snap.Roots))
+		publicCount := 0
+		internalCount := 0
 
 		for taskName, taskDef := range root.Taskfile.Tasks.All(nil) {
 			if taskDef.Internal {
+				internalCount++
 				continue
 			}
+			publicCount++
 
-			tool := CreateToolForTask(root.Taskfile, prefix, taskName, taskDef, logger)
+			tool := CreateToolForTask(root.Taskfile, prefix, taskName, taskDef)
 			candidates[tool.Name] = append(candidates[tool.Name], toolCandidate{
 				workdir:  root.Workdir,
 				taskName: taskName,
@@ -89,6 +97,13 @@ func BuildPlan(snap StateSnapshot, logger *slog.Logger) Plan {
 				handler:  exec.NewHandler(root.Workdir, taskName),
 			})
 		}
+
+		logger.Debug("scanned root for tasks",
+			slog.String("event", "plan.root_scanned"),
+			slog.String("workdir", root.Workdir),
+			slog.Int("public_tasks", publicCount),
+			slog.Int("internal_tasks", internalCount),
+		)
 	}
 
 	names := make([]string, 0, len(candidates))
